@@ -22,12 +22,8 @@ def get_book(request):
         return Response(book_serializer)
 
 @api_view(['GET'])
-def get_chapter(request, number):
+def get_chapter(request, book_id, chapter_number):
     if request.method == "GET":
-        chapter = Chapter.objects.get(number=number)
+        chapter = Chapter.objects.get(book=book_id,number=chapter_number)
         serializer = ChapterSerializer(chapter)
         return Response(serializer.data)
-
-
-
-
