@@ -6,23 +6,20 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 
 @api_view(['GET'])
-def get_all_book(request):
+def get_book(request):
     if request.method == "GET":
         books = Book.objects.all()
-        serializer = BookSerializer(books, many=True)
-        return Response(serializer.data)
 
-@api_view(['GET'])
-def get_book(request, id):
-    if request.method == "GET":
-        book = Book.objects.get(id=id)
-        serializer = BookSerializer(book)
+        book_serializer = list()
+        # get book amount of chapter
+        for book in books:
+            chapter_amount = len(book.chapter.all())
+            book_dict = {"chapter_amount": chapter_amount}
+            serializer = BookSerializer(book)
+            book_dict.update(serializer.data)
+            book_serializer.append(book_dict)
 
-        chapter_amount = len(book.chapter.all())
-        new_serializer = {"chapter_amount":chapter_amount}
-        new_serializer.update(serializer.data)
-
-        return Response(new_serializer)
+        return Response(book_serializer)
 
 @api_view(['GET'])
 def get_chapter(request, number):
