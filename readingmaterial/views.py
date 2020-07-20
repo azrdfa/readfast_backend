@@ -13,8 +13,11 @@ def get_book(request):
         book_serializer = list()
         # get book amount of chapter
         for book in books:
-            chapter_amount = len(book.chapter.all())
-            book_dict = {"chapter_amount": chapter_amount}
+            chapters = book.chapter.all()
+            chapter_list = list()
+            for chapter in chapters:
+                chapter_list.append({ "id": chapter.id, "number" : chapter.number, "title" : chapter.title })
+            book_dict = {"chapters": chapter_list}
             serializer = BookSerializer(book)
             book_dict.update(serializer.data)
             book_serializer.append(book_dict)
@@ -22,8 +25,8 @@ def get_book(request):
         return Response(book_serializer)
 
 @api_view(['GET'])
-def get_chapter(request, book_id, chapter_number):
+def get_chapter(request, chapter_id):
     if request.method == "GET":
-        chapter = Chapter.objects.get(book=book_id,number=chapter_number)
+        chapter = Chapter.objects.get(id=chapter_id)
         serializer = ChapterSerializer(chapter)
         return Response(serializer.data)

@@ -17,6 +17,11 @@ class Book(models.Model):
         max_length=50,
         verbose_name="author"
         )
+    language = models.CharField(
+        blank=False,
+        max_length=50,
+        verbose_name="language"
+    )
 
     class Meta:
         verbose_name = "Book"
