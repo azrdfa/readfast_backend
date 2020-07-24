@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import get_book, get_chapter
+from .views import *
 
 app_name = "reregistration"
 urlpatterns = [
-    path("book/", get_book, name="get-book"),
-    path("chapter/<int:chapter_id>", get_chapter, name="get-chapter"),
+    path("all/", get_all, name="all"),
+    path("story-content/<int:id>/", get_story_content, name="story-content"),
+    path("book-chapters/<int:id>/", get_book_chapters, name="book-chapters"),
+    path("chapter-content/<int:id>/", get_chapter_content, name="chapter-content"),
 ]
