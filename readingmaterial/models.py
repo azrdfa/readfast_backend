@@ -55,3 +55,37 @@ class Chapter(models.Model):
 
     def __str__(self):
         return f"{self.book.title} {self.book.sub_title} chapter {self.number}"
+
+class Story(models.Model):
+
+    title = models.CharField(
+        blank=False,
+        max_length=50,
+        verbose_name="title"
+        )
+    sub_title = models.CharField(
+        blank=False,
+        max_length=50,
+        verbose_name="sub_title"
+        )
+    author = models.CharField(
+        blank=False,
+        max_length=50,
+        verbose_name="author"
+        )
+    language = models.CharField(
+        blank=False,
+        max_length=50,
+        verbose_name="language"
+    )
+    content = models.TextField(
+        blank=False,
+        verbose_name="content"
+    )
+
+    class Meta:
+        verbose_name = "Story"
+        verbose_name_plural = "Stories"
+
+    def __str__(self):
+        return f"{self.title} {self.sub_title} by {self.author}"
