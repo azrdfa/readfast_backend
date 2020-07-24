@@ -1,32 +1,45 @@
 from django.shortcuts import render
-from .models import Book, Chapter
-from .serializers import BookSerializer, ChapterSerializer
+from django.http import JsonResponse
+from .models import *
+from .serializers import *
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
 
-@api_view(['GET'])
-def get_book(request):
+@api_view(["GET"])
+def get_all(request):
     if request.method == "GET":
-        books = Book.objects.all()
-
-        book_serializer = list()
-        # get book amount of chapter
+        reading_materials = { "data" : list() }
+        books = Book.objects.values("id", "title", "sub_title", "author", "language").order_by("title")
+        stories = Story.objects.values("id", "title", "sub_title", "author", "language").order_by("title")
         for book in books:
-            chapters = book.chapter.all()
-            chapter_list = list()
-            for chapter in chapters:
-                chapter_list.append({ "id": chapter.id, "number" : chapter.number, "title" : chapter.title })
-            book_dict = {"chapters": chapter_list}
-            serializer = BookSerializer(book)
-            book_dict.update(serializer.data)
-            book_serializer.append(book_dict)
+            book["category"] = "book"
+            reading_materials["data"].append(book)
+        for story in stories:
+            story["category"] = "story"
+            reading_materials["data"].append(story)
+        return JsonResponse(reading_materials)
 
-        return Response(book_serializer)
-
-@api_view(['GET'])
-def get_chapter(request, chapter_id):
+@api_view(["GET"])
+def get_story_content(request, id):
     if request.method == "GET":
-        chapter = Chapter.objects.get(id=chapter_id)
-        serializer = ChapterSerializer(chapter)
-        return Response(serializer.data)
+        content = { "data": "" }
+        story = Story.objects.get(id=id)
+        content["data"] = story.content
+        return JsonResponse(content)
+
+@api_view(["GET"])
+def get_book_chapters(request, id):
+    if request.method == "GET":
+        chapters = { "data": "" }
+        book = Book.objects.get(id=id)
+        chapters["data"] = list(book.chapter.values("id", "title", "number").order_by("number"))
+        return JsonResponse(chapters)
+
+@api_view(["GET"])
+def get_chapter_content(request, id):
+    if request.method == "GET":
+        content = { "data": "" }
+        chapter = Chapter.objects.get(id=id)
+        content["data"] = chapter.content
+        return JsonResponse(content)
