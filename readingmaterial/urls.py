@@ -1,7 +1,6 @@
 from django.urls import path
 from .views import *
 
-app_name = "reregistration"
 urlpatterns = [
     path("all/", get_all, name="all"),
     path("story-content/<int:id>/", get_story_content, name="story-content"),
