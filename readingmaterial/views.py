@@ -13,9 +13,13 @@ def get_all(request):
         books = Book.objects.values("id", "title", "sub_title", "author", "language").order_by("title")
         stories = Story.objects.values("id", "title", "sub_title", "author", "language").order_by("title")
         for book in books:
+            tags = Book.objects.get(id=book["id"]).tag_set.values_list("name", flat=True)
+            book["tags"] = list(tags)
             book["category"] = "book"
             reading_materials["data"].append(book)
         for story in stories:
+            tags = Story.objects.get(id=story["id"]).tag_set.values_list("name", flat=True)
+            story["tags"] = list(tags)
             story["category"] = "story"
             reading_materials["data"].append(story)
         return JsonResponse(reading_materials)

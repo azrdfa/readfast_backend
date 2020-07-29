@@ -89,3 +89,22 @@ class Story(models.Model):
 
     def __str__(self):
         return f"{self.title} {self.sub_title} by {self.author}"
+
+
+class Tag(models.Model):
+
+    name = models.CharField(
+        blank=False,
+        max_length=50,
+        verbose_name="name"
+        )
+    
+    books = models.ManyToManyField(Book, blank=True, null=True)
+    stories = models.ManyToManyField(Story, blank=True, null=True)
+    
+    class Meta:
+        verbose_name = "Tag"
+        verbose_name_plural = "Tags"
+
+    def __str__(self):
+        return f"{self.name}"
