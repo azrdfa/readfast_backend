@@ -129,7 +129,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:8080',
+    'http://localhost',
+    'http://localhost:8080'
 ]
 
 # Heroku: Update database configuration from $DATABASE_URL.
